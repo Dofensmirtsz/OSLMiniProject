@@ -41,20 +41,25 @@ def ledOff ():
    GPIO.output(18,GPIO.LOW)
 
 def lightStatus():
-    jsonFile = open("C:/mydir/lightData.json","r")
-    data = json.load(jsonFile)
-    jsonFile.close
-    value = data["lights"][0]["status"]
-    print value
-    return value
+    try:
+        jsonFile = \
+            open('/home/rasp/Documents/OSLMiniProject-master/lightData.json'
+                 , 'r')
+        data = json.load(jsonFile)
+        jsonFile.close
+        value = data['lights'][0]['status']
+        return value
+    except:
+        print 'Test'
+
 
 #Catch when script is interrupted, cleanup correctly
 try:
     # Main loop
     while True:
         lightOn = lightStatus()
-
-        if(lightOn):
+        print lightOn
+        if lightOn == "true":
             count = rc_time(pin_to_circuit)
             print count
             if(count > 666):
@@ -62,6 +67,7 @@ try:
             else:
                 ledOff()
         else:
+            ledOff()
             print("light not on")
 
 except KeyboardInterrupt:
